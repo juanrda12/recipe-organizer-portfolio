@@ -33,3 +33,6 @@ static/uploads/*
 !static/uploads/chicken_fajitas.jpg
 !static/uploads/chocolate_chip_cookies.jpg
 !static/uploads/mac_and_cheese.jpg
+
+# Track env example
+!.env.example
