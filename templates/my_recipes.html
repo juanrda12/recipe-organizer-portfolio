@@ -21,7 +21,7 @@
                         <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" alt="{{ recipe.title }}" class="recipe-card-image">
                     {% else %}
                         {# Optional: Placeholder image if no image is uploaded #}
-                        <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.png') }}" alt="No image available" class="recipe-card-image placeholder-image">
+                        <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.jpg') }}" alt="No image available" class="recipe-card-image placeholder-image">
                     {% endif %}
 
                     <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}"><h4>{{ recipe.title }}</h4></a>
