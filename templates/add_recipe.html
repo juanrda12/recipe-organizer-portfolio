@@ -1,0 +1,101 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Add Recipe
+{% endblock %}
+
+{% block main %}
+    <h2 class="page-heading">{{ "Edit Recipe" if recipe else "Add New Recipe" }}</h2>
+
+    <form action="{{ url_for('add_recipe') if not recipe else url_for('edit_recipe', recipe_id=recipe.id) }}" method="post" enctype="multipart/form-data" class="vertical-form">
+
+        <div class="form-group">
+            <label for="title">Recipe Title <span class="required">*</span></label>
+            <input type="text" id="title" name="title" value="{{ recipe.title if recipe else '' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea id="description" name="description" rows="3">{{ recipe.description if recipe else '' }}</textarea>
+        </div>
+
+        {# Image Upload Field #}
+        <div class="form-group">
+            <label for="image">Upload Image (PNG, JPG, GIF, HEIC/HEIF)</label>
+            <input type="file" id="image" name="image" accept="image/*">
+            {% if recipe and recipe.image_filename %}
+                <p class="current-image-preview">Current Image:</p>
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" alt="Current Recipe Image" class="uploaded-image-preview">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="delete_current_image" name="delete_current_image">
+                    <label for="delete_current_image">Delete current image</label>
+                </div>
+            {% endif %}
+        </div>
+        {# END Image #}
+
+        <div class="form-group">
+            <label for="instructions">Instructions <span class="required">*</span></label>
+            <textarea id="instructions" name="instructions" rows="8" required>{{ recipe.instructions if recipe else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+        <label>Preparation and Cooking Times (optional)</label>
+            <div class="time-inputs">
+                <input type="text" name="prep_time" placeholder="Prep Time (e.g., 20 mins)" value="{{ recipe.prep_time if recipe else '' }}">
+                <input type="text" name="cook_time" placeholder="Cook Time (e.g., 30 mins)" value="{{ recipe.cook_time if recipe else '' }}">
+            </div>
+        </div>
+
+        <h3 id="ingredients-heading">Ingredients</h3>
+        <p class="hint-text">Add ingredients below. You can add or remove as many as you need.</p>
+        <div id="ingredients-container">
+            {# handles both new and existing recipes #}
+            {% if recipe and recipe.ingredients %}
+                {% for i in range(recipe.ingredients|length) %}
+                    <div class="ingredient-group">
+                        <div class="form-group">
+                            <label for="ingredient_name_{{ i }}">Ingredient Name</label>
+                            <input type="text" id="ingredient_name_{{ i }}" name="ingredient_name_{{ i }}" value="{{ recipe.ingredients[i].name }}">
+                        </div>
+                        <div class="form-group">
+                            <label for="ingredient_qty_{{ i }}">Quantity/Unit</label>
+                            <input type="text" id="ingredient_qty_{{ i }}" name="ingredient_qty_{{ i }}" placeholder="e.g., 1 cup" value="{{ recipe.ingredients[i].quantity_unit }}">
+                        </div>
+                        <button type="button" class="remove-ingredient-btn">Remove ingredient</button>
+                    </div>
+                {% endfor %}
+            {% else %}
+                {# Display at least one blank ingredient row for new recipes #}
+                <div class="ingredient-group">
+                    <div class="form-group">
+                        <label for="ingredient_name_0">Ingredient Name</label>
+                        <input type="text" id="ingredient_name_0" name="ingredient_name_0" placeholder="Ingredient Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="ingredient_qty_0">Quantity/Unit</label>
+                        <input type="text" id="ingredient_qty_0" name="ingredient_qty_0" placeholder="e.g., 1 cup">
+                    </div>
+                    <button type="button" class="remove-ingredient-btn">Remove ingredient</button>
+                </div>
+            {% endif %}
+        </div>
+        <button type="button" id="add-ingredient-btn" class="primary-btn">Add Ingredient</button>
+
+        <h3>Categories</h3>
+        <p class="hint-text">Select one or more categories that apply.</p>
+        <div class="category-checkboxes">
+            {% for category in categories %}
+                <div class="checkbox-group">
+                    <input type="checkbox" id="category_{{ category.id }}" name="categories" value="{{ category.id }}"
+                    {% if selected_category_ids and category.id | string in selected_category_ids %}checked{% endif %}>
+                    <label for="category_{{ category.id }}">{{ category.name }}</label>
+                </div>
+            {% endfor %}
+        </div>
+
+        <button type="submit" class="action-btn primary-btn">{{ "Update Recipe" if recipe else "Add Recipe" }}</button>
+        <a href="{{ url_for('index') }}" class="action-btn back-btn">Cancel</a>
+
+    </form>
+{% endblock %}

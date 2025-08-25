@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Favorite Recipes
+{% endblock %}
+
+{% block main %}
+    <h2 class="page-heading">My Favorite Recipes</h2>
+
+    {% if recipes %}
+        <div class="recipes-grid">
+            {% for recipe in recipes %}
+                <div class="recipe-card">
+                    {# Display Image #}
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" alt="{{ recipe.title }}" class="recipe-card-image">
+                    {% else %}
+                        {# Optional: Placeholder image if no image is uploaded #}
+                        <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.jpg') }}" alt="No image available" class="recipe-card-image placeholder-image">
+                    {% endif %}
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}"><h4>{{ recipe.title }}</h4></a>
+
+                    {# Use the is_current_user_owner flag we calculated in the SQL query #}
+                    {% if recipe.is_current_user_owner %}
+                        <p class="recipe-owner">By: You!</p>
+                    {% elif recipe.user_id == system_user_id %}
+                        <p class="recipe-owner">By: {{ recipe.owner_username }} (Default)</p>
+                    {% else %}
+                        <p class="recipe-owner">By: {{ recipe.owner_username }}</p>
+                    {% endif %}
+
+                    {% if recipe.description %}
+                        <p class="description-preview">{{ recipe.description | truncate(100, True, '...') }}</p>
+                    {% endif %}
+
+                    <div class="times-preview">
+                        {% if recipe.prep_time %}<span>Prep: {{ recipe.prep_time }}</span>{% endif %}
+                        {% if recipe.cook_time %}<span>Cook: {{ recipe.cook_time }}</span>{% endif %}
+                    </div>
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-details-btn">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't added any recipes to your favorites yet. <a href="{{ url_for('index') }}">Browse recipes</a> to find some!</p>
+    {% endif %}
+
+{% endblock %}

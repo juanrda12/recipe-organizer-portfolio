@@ -1,0 +1,48 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    My Recipes
+{% endblock %}
+
+{% block main %}
+    <h2 class="page-heading">My Recipes</h2>
+
+    <div class="add-recipe-link">
+        <a href="{{ url_for('add_recipe') }}" class="primary-btn">Add New Recipe</a>
+    </div>
+
+
+    {% if recipes %}
+        <div class="recipes-grid">
+            {% for recipe in recipes %}
+                <div class="recipe-card">
+                    {# Display Image #}
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" alt="{{ recipe.title }}" class="recipe-card-image">
+                    {% else %}
+                        {# Optional: Placeholder image if no image is uploaded #}
+                        <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.png') }}" alt="No image available" class="recipe-card-image placeholder-image">
+                    {% endif %}
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}"><h4>{{ recipe.title }}</h4></a>
+
+                    <p class="recipe-owner">By: You!</p>
+
+                    {% if recipe.description %}
+                        <p class="description-preview">{{ recipe.description | truncate(100, True, '...') }}</p>
+                    {% endif %}
+
+                    <div class="times-preview">
+                        {% if recipe.prep_time %}<span>Prep: {{ recipe.prep_time }}</span>{% endif %}
+                        {% if recipe.cook_time %}<span>Cook: {{ recipe.cook_time }}</span>{% endif %}
+                    </div>
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-details-btn">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>You haven't created any recipes yet. <a href="{{ url_for('add_recipe') }}">Add your first recipe</a>!</p>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,86 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ recipe.title }}
+{% endblock %}
+
+{% block main %}
+    <div class="recipe-detail-card">
+        <div class="image-center">
+            {% if recipe.image_filename %}
+                <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}"
+                     alt="{{ recipe.title }}" class="recipe-detail-image">
+            {% else %}
+                <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.jpg') }}"
+                     alt="No image available" class="recipe-detail-image placeholder-image">
+            {% endif %}
+        </div>
+
+        <h2>{{ recipe.title }}</h2>
+        <p class="recipe-owner">
+            By:
+            {% if recipe.user_id == session.get('user_id') %}
+                You!
+            {% else %}
+                {{ recipe.owner_username }} (Default)
+            {% endif %}
+        </p>
+
+        {% if recipe.description %}
+            <p class="recipe-description">{{ recipe.description }}</p>
+        {% endif %}
+
+        <div class="recipe-times">
+            {% if recipe.prep_time %}<span>Preparation: {{ recipe.prep_time }}</span>{% endif %}
+            {% if recipe.cook_time %}<span>Cooking: {{ recipe.cook_time }}</span>{% endif %}
+        </div>
+
+        <h3>Ingredients</h3>
+        {% if recipe.ingredients %}
+            <ul class="ingredient-list">
+                {% for ingredient in recipe.ingredients %}
+                    <li>{{ ingredient.name }} - {{ ingredient.quantity_unit }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No ingredients listed.</p>
+        {% endif %}
+
+        <h3>Instructions</h3>
+        <div class="recipe-instructions">
+            {{ recipe.instructions }}
+        </div>
+
+        {% if recipe.categories %}
+            <h3>Categories</h3>
+            <div class="category-tags">
+                {% for category in recipe.categories %}
+                    <span class="category-tag">{{ category.name }}</span>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="recipe-actions">
+            {% if session.get('user_id') %}
+                <form action="{{ url_for('toggle_favorite') }}" method="post" style="display:inline;">
+                    <input type="hidden" name="recipe_id" value="{{ recipe.id }}">
+                    <button type="submit" class="action-btn favorite-btn {% if is_favorited %}unfavorite{% else %}favorite{% endif %}">
+                        {% if is_favorited %}
+                            Unfavorite Recipe
+                        {% else %}
+                            Favorite Recipe
+                        {% endif %}
+                    </button>
+                </form>
+            {% endif %}
+
+            {% if recipe.user_id == session.user_id %}
+                <a href="{{ url_for('edit_recipe', recipe_id=recipe.id) }}" class="action-btn edit-btn">Edit Recipe</a>
+                <form action="{{ url_for('delete_recipe', recipe_id=recipe.id) }}" method="post" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+                    <button type="submit" class="action-btn delete-btn">Delete Recipe</button>
+                </form>
+            {% endif %}
+            <a href="{{ url_for('index') }}" class="action-btn back-btn">Back to Recipes</a>
+        </div>
+    </div>
+{% endblock %}

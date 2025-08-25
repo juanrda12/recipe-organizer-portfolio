@@ -1,0 +1,93 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Recipes
+{% endblock %}
+
+{% block main %}
+    <h2 class="page-heading">Recipes</h2>
+
+    <div class="add-recipe-link">
+        <a href="{{ url_for('add_recipe') }}" class="primary-btn">Add New Recipe</a>
+    </div>
+
+    <div class="filter-controls">
+        <form action="{{ url_for('index') }}" method="get" class="row g-3 align-items-end w-100">
+
+            {# Search Input Field #}
+            <div class="col-12 col-md-5">
+                <label for="q" class="form-label visually-hidden">Search recipes</label>
+                <input type="text" id="q" name="q" class="form-control" placeholder="Search recipes..." value="{{ query|default('') }}">
+            </div>
+
+            {# Category Filter Dropdown #}
+            <div class="col-12 col-md-3">
+                <label for="category_id" class="form-label">Filter by Category:</label>
+                <select name="category_id" id="category_id" class="form-select">
+                    <option value="">All Categories</option>
+                    {% for category in all_categories %}
+                        <option value="{{ category.id }}" {% if selected_category_id and selected_category_id == category.id %}selected{% endif %}>
+                            {{ category.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {# Owner Filter Dropdown #}
+            <div class="col-12 col-md-4">
+                <label for="owner_filter" class="form-label">Filter by Owner:</label>
+                <select name="owner_filter" id="owner_filter" class="form-select">
+                    <option value="my_and_default" {% if owner_filter == 'my_and_default' %}selected{% endif %}>My & Default Recipes</option>
+                    <option value="my_recipes" {% if owner_filter == 'my_recipes' %}selected{% endif %}>My Recipes</option>
+                    <option value="default_recipes" {% if owner_filter == 'default_recipes' %}selected{% endif %}>Default Recipes</option>
+                    <option value="all_recipes" {% if owner_filter == 'all_recipes' %}selected{% endif %}>All Recipes</option>
+                </select>
+            </div>
+
+            {# Submit Button for the combined form #}
+            <div class="col-12 col-md-auto">
+                <button type="submit" class="btn btn-primary">Apply Filters</button>
+            </div>
+        </form>
+    </div>
+
+    {% if recipes %}
+        <div class="recipes-grid">
+            {% for recipe in recipes %}
+                <div class="recipe-card">
+                    {# Display Image #}
+                    {% if recipe.image_filename %}
+                        <img src="{{ url_for('static', filename='uploads/' + recipe.image_filename) }}" alt="{{ recipe.title }}" class="recipe-card-image">
+                    {% else %}
+                        {# Optional: Placeholder image if no image is uploaded #}
+                        <img src="{{ url_for('static', filename='uploads/default_recipe_placeholder.jpg') }}" alt="No image available" class="recipe-card-image placeholder-image">
+                    {% endif %}
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}"><h4>{{ recipe.title }}</h4></a>
+                    {% if recipe.user_id == session.get('user_id') %} {# Check against current user's ID #}
+                        <p class="recipe-owner">By: You!</p>
+                    {% elif recipe.user_id == system_user_id %} {# system_user_id is passed and equals 1 #}
+                        <p class="recipe-owner">By: {{ recipe.owner_username }} (Default)</p>
+                    {% else %} {# For other users if 'All Recipes' is selected #}
+                        <p class="recipe-owner">By: {{ recipe.owner_username }}</p>
+                    {% endif %}
+
+
+                    {% if recipe.description %}
+                        <p class="description-preview">{{ recipe.description | truncate(100, True, '...') }}</p>
+                    {% endif %}
+
+                    <div class="times-preview">
+                        {% if recipe.prep_time %}<span>Prep: {{ recipe.prep_time }}</span>{% endif %}
+                        {% if recipe.cook_time %}<span>Cook: {{ recipe.cook_time }}</span>{% endif %}
+                    </div>
+
+                    <a href="{{ url_for('recipe_detail', recipe_id=recipe.id) }}" class="view-details-btn">View Details</a>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No recipes found matching your criteria! {% if not query and not selected_category_id %}<a href="{{ url_for('add_recipe') }}">Add your first recipe</a> or browse some of our default suggestions.{% endif %}</p>
+    {% endif %}
+
+{% endblock %}

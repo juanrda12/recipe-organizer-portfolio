@@ -1,0 +1,35 @@
+# Python / Flask
+__pycache__/
+*.pyc
+.venv/
+.env
+.env.*
+flask_session/
+
+# Bases de datos (no subirlas)
+*.sqlite3
+*.db
+recipes.db
+
+# Subidas de usuarios (no versionarlas)
+static/uploads/*
+# mantener un placeholder y/o .gitkeep, destápalos:
+!static/uploads/.gitkeep
+!static/uploads/default_recipe_placeholder.jpg
+!static/uploads/default_recipe_placeholder.png
+
+# Editor / SO
+.vscode/
+.DS_Store
+
+# Keep app's default images (track them even though uploads/* is ignored)
+!static/uploads/spaghetti_bolognese.jpg
+!static/uploads/scrambled_eggs.jpg
+!static/uploads/classic_guacamole.jpg
+!static/uploads/lemon_herb_roast_chicken.jpg
+!static/uploads/vegetable_stir_fry.jpg
+!static/uploads/pesto_pasta.jpg
+!static/uploads/homemade_pizza.jpg
+!static/uploads/chicken_fajitas.jpg
+!static/uploads/chocolate_chip_cookies.jpg
+!static/uploads/mac_and_cheese.jpg
