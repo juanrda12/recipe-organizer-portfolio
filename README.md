@@ -37,20 +37,37 @@ This project is a web application for managing recipes. Users can register, log 
 
     # Install dependencies
     python -m pip install -r requirements.txt
+
+    # Note: if your system uses python3 / pip3, substitute accordingly
     ```
-4. **Set up the environment variable:**
+4. **Set up the environment variables:**
     - Create a .env file in the project root (you can start from .env.example).
     - Add your SECRET_KEY to this file.
     - Example .env file:
     ```bash
     FLASK_APP=app.py
     FLASK_DEBUG=1
-    SECRET_KEY=random_secret_key>
+    SECRET_KEY=random_secret_key
     ```
 5.  **Create the database:**
     ```bash
     python schema.py
     ```
+Optional fresh start:
+
+- macOS / Linux:
+    ```bash
+    rm -f recipes.db && python schema.py
+    ```
+
+- Windows (PowerShell):
+    ```bash
+    Remove-Item -ErrorAction SilentlyContinue recipes.db; python schema.py
+    ```
+Optional quick check (should print 10 if default recipes were seeded):
+
+    sqlite3 recipes.db "SELECT COUNT(*) FROM recipes;"
+
 6.  **Run the Flask application:**
     ```bash
     debug mode:
