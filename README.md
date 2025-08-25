@@ -95,7 +95,7 @@ Optional quick check (should print 10 if default recipes were seeded):
 
 
 ## Design Choices and Rationale
-* **Using SQLite:** I chose to use SQLite for this project since it's the program we learned to use during the course, so I was already comfortable working with it. I also had to study and research a little bit more on the web about its use, which proved beneficial in improving and expanding my knowledge of SQLite3. Also since it's a file-based database, which means there's no need for a separate server, makes the project easy to run and distribute.
+* **Using SQLite:** I chose to use SQLite for this project since it's the program I learned to use during the cs50x course, so I was already comfortable working with it. I also had to study and research a little bit more on the web about its use, which proved beneficial in improving and expanding my knowledge of SQLite3. Also since it's a file-based database, which means there's no need for a separate server, makes the project easy to run and distribute.
 
 * **Database Schema:** The use of separate tables for `recipes`, `ingredients`, and `recipe_categories` follows a relational database design principle. This prevents data redundancy and makes the data easier to manage and query.
 
