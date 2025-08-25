@@ -16,11 +16,11 @@ This project is a web application for managing recipes. Users can register, log 
 ## How to Run the Project
 1.  **Clone the repository:**
     ```bash
-    git clone https://github.com/code50/193069807.git
+    git clone https://github.com/juanrda12/recipe-organizer-portfolio.git
     ```
 2.  **Navigate to the project directory:**
     ```bash
-    cd portfolio-final
+    cd recipe-organizer-portfolio
     ```
 3.  **Install the required dependencies:**
     ```bash
@@ -39,13 +39,13 @@ This project is a web application for managing recipes. Users can register, log 
     python -m pip install -r requirements.txt
     ```
 4. **Set up the environment variable:**
-    - Create a file named .env in the project's root directory.
+    - Create a .env file in the project root (you can start from .env.example).
     - Add your SECRET_KEY to this file.
     - Example .env file:
     ```bash
     FLASK_APP=app.py
     FLASK_DEBUG=1
-    SECRET_KEY="<random_secret_key>"
+    SECRET_KEY=random_secret_key>
     ```
 5.  **Create the database:**
     ```bash
